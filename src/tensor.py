@@ -42,6 +42,15 @@ class ParallelTensor:
     def __add__(self, other: "ParallelTensor") -> "ParallelTensor":
         return run_op(self, other, lambda x, y: x + y)
 
+    def __sub__(self, other: "ParallelTensor") -> "ParallelTensor":
+        return run_op(self, other, lambda x, y: x - y)
+
+    def __mul__(self, other: "ParallelTensor") -> "ParallelTensor":
+        return run_op(self, other, lambda x, y: x * y)
+
+    def __truediv__(self, other: "ParallelTensor") -> "ParallelTensor":
+        return run_op(self, other, lambda x, y: x / y)
+
 
 def run_op(
     tensor1: ParallelTensor, tensor2: ParallelTensor, op: Callable
