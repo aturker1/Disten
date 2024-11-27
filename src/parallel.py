@@ -6,12 +6,26 @@ N_DEVICE = 4
 
 
 def distribute_tensor(tensor: Tensor, device_mesh: tuple[int, ...]) -> ParallelTensor:
-    assert (
-        len(device_mesh) == tensor.ndim
-    ), "placement length must match tensor dimensions"
-    assert (
-        N_DEVICE % math.prod(device_mesh) == 0
-    ), "number of devices must be divisible by the product of the mesh"
+    # Validate input types
+    if not isinstance(device_mesh, tuple):
+        raise ValueError(f"device_mesh must be a tuple, got {type(device_mesh)}")
+
+    # Validate tensor dimensions match mesh
+    if len(device_mesh) != tensor.ndim:
+        raise ValueError(
+            f"device_mesh dimensions ({len(device_mesh)}) must match tensor dimensions ({tensor.ndim})"
+        )
+
+    # Validate device count
+    mesh_size = math.prod(device_mesh)
+    if N_DEVICE % mesh_size != 0:
+        raise ValueError(
+            f"Number of devices ({N_DEVICE}) must be divisible by product of device_mesh ({mesh_size})"
+        )
+
+    # Validate mesh dimensions
+    if not all(isinstance(d, int) and d > 0 for d in device_mesh):
+        raise ValueError("All device_mesh dimensions must be positive integers")
 
     local_tensor_shape = []
     global_tensor_shape = tensor.shape

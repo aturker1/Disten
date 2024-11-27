@@ -1,7 +1,3 @@
-import numpy as np
-from src.tensor import Tensor, ParallelTensor
-from src.parallel import distribute_tensor
-from src import parallel
 from src.utils import propagate_mesh
 import pytest
 
@@ -11,6 +7,7 @@ def test_propagate_same_mesh():
     mesh2 = (2, 2)
     new_mesh = propagate_mesh(mesh1, mesh2)
     assert new_mesh == (2, 2)
+
 
 def test_propagate_different_mesh():
     mesh1 = (2, 2)
